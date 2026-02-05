@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة درجات الطالب</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    background:#f2f4f8;
+    padding:10px;
+    margin:0;
+}
+
+.container{
+    background:#fff;
+    border-radius:12px;
+    padding:15px;
+    max-width:900px;
+    margin:auto;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+h1{
+    text-align:center;
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+/* ===== الشكل الافتراضي (موبايل) ===== */
+.subject{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+.subject input{
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    font-size:15px;
+}
+
+.del{
+    width:100%;
+    background:#dc3545;
+    color:#fff;
+    border:none;
+    padding:10px;
+    border-radius:8px;
+}
+
+/* ===== أزرار ===== */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.add{background:#007bff;color:#fff;margin-bottom:10px;}
+.calc{background:#28a745;color:#fff;}
+
+.result{
+    margin-top:15px;
+    background:#f7f7f7;
+    padding:12px;
+    border-radius:10px;
+    font-size:15px;
+}
+
+/* ===== كمبيوتر / لابتوب ===== */
+@media (min-width: 768px){
+    h1{font-size:24px;}
+
+    .subject{
+        display:grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap:10px;
+        align-items:center;
+    }
+
+    .subject input{
+        margin-bottom:0;
+    }
+
+    .del{
+        width:auto;
+        padding:10px 14px;
+    }
+
+    button{
+        width:auto;
+    }
+
+    .add, .calc{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🎓 حاسبة درجات الطالب</h1>
+
+<div id="subjects"></div>
+
+<button class="add" onclick="addSubject()">➕ إضافة مادة</button>
+<button class="calc" onclick="calculate()">📊 احسب النتيجة</button>
+
+<div class="result" id="result"></div>
+</div>
+
+<script>
+function addSubject(){
+    let d=document.createElement("div");
+    d.className="subject";
+    d.innerHTML=`
+        <input placeholder="اسم المادة">
+        <input type="number" placeholder="الدرجة النهائية">
+        <input type="number" placeholder="درجة الطالب">
+        <button class="del" onclick="this.parentElement.remove()">❌</button>
+    `;
+    document.getElementById("subjects").appendChild(d);
+}
+
+function calculate(){
+    let subs=document.querySelectorAll(".subject");
+    let max=0, stu=0;
+
+    subs.forEach(s=>{
+        let i=s.querySelectorAll("input");
+        if(i[1].value && i[2].value){
+            max+=Number(i[1].value);
+            stu+=Number(i[2].value);
+        }
+    });
+
+    if(max===0){
+        alert("من فضلك أدخل الدرجات");
+        return;
+    }
+
+    let p=(stu/max)*100;
+    let gpa,grade;
+
+    if(p>=90){gpa=4;grade="امتياز";}
+    else if(p>=80){gpa=3.5;grade="جيد جدًا";}
+    else if(p>=70){gpa=3;grade="جيد";}
+    else if(p>=60){gpa=2;grade="مقبول";}
+    else{gpa=0;grade="راسب";}
+
+    document.getElementById("result").innerHTML=`
+        <b>النسبة:</b> ${p.toFixed(2)}% <br>
+        <b>GPA:</b> ${gpa} <br>
+        <b>التقدير:</b> ${grade}
+    `;
+}
+
+addSubject();
+</script>
+
+</body>
+</html>
